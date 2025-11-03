@@ -1,152 +1,76 @@
-// Compostagem e Gestão de Recursos — feito por alunos do CEP para amostra de química 3K
+const compostBin = document.getElementById("composteira");
+const trashBin = document.getElementById("lixo");
+const itemsArea = document.getElementById("items");
+const scoreText = document.getElementById("score");
+const message = document.getElementById("message");
 
-const itemsBox = document.getElementById('items');
-const compost = document.getElementById('compost');
-const trash = document.getElementById('trash');
-const compostFill = document.getElementById('compostFill');
-const compostAmt = document.getElementById('compostAmt');
-const resources = document.getElementById('resources');
-const pollution = document.getElementById('pollution');
-const logBox = document.getElementById('logBox');
-const moisture = document.getElementById('moisture');
-const moistureVal = document.getElementById('moistureVal');
-const aerationBtn = document.getElementById('turnBtn');
-const spawnBtn = document.getElementById('spawnBtn');
+let score = 0;
 
-let game = {
-  compost: 0,
-  resources: 0,
-  pollution: 0,
-  decayRate: 1,
-};
-
-moisture.addEventListener('input', () => {
-  moistureVal.textContent = moisture.value;
-  adjustDecay();
-});
-
-function adjustDecay() {
-  const m = Number(moisture.value);
-  if (m < 40) game.decayRate = 0.6;
-  else if (m <= 75) game.decayRate = 1.2;
-  else game.decayRate = 0.8;
-}
-adjustDecay();
-
-aerationBtn.addEventListener('click', () => {
-  log('Composteira virada — aeração aumentada!');
-  game.decayRate *= 1.25;
-  setTimeout(() => {
-    adjustDecay();
-    log('Compostagem estabilizada.');
-  }, 6000);
-});
-
-spawnBtn.addEventListener('click', () => {
-  generateItems(4);
-  log('Novos itens gerados.');
-});
-
-function log(txt) {
-  const d = new Date().toLocaleTimeString();
-  logBox.innerHTML = `<div>[${d}] ${txt}</div>` + logBox.innerHTML;
-}
-
-const ITEM_TYPES = [
-  { key: 'org', label: 'Restos orgânicos', value: 6 },
-  { key: 'paper', label: 'Papel', value: 3 },
-  { key: 'plastic', label: 'Plástico', value: -2 },
+const items = [
+  { name: "Casca de banana", type: "org" },
+  { name: "Papel", type: "org" },
+  { name: "Garrafa plástica", type: "trash" },
+  { name: "Restos de comida", type: "org" },
+  { name: "Lata de refrigerante", type: "trash" },
+  { name: "Folhas secas", type: "org" },
+  { name: "Isopor", type: "trash" },
 ];
 
-function generateItems(n = 6) {
-  for (let i = 0; i < n; i++) {
-    const t = ITEM_TYPES[Math.floor(Math.random() * ITEM_TYPES.length)];
-    const el = document.createElement('div');
-    el.className = `item ${t.key}`;
-    el.draggable = true;
-    el.dataset.type = t.key;
-    el.dataset.value = t.value;
-    el.innerHTML = `<span>${t.label.split(' ')[0]}</span>`;
-
-    el.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('type', t.key);
-      e.dataTransfer.setData('value', t.value);
-      e.dataTransfer.effectAllowed = 'move';
-      setTimeout(() => (el.style.opacity = '0.5'), 0);
+// Gera os itens
+function createItems() {
+  itemsArea.innerHTML = "";
+  items.forEach((item, i) => {
+    const div = document.createElement("div");
+    div.className = `item ${item.type}`;
+    div.textContent = item.name;
+    div.draggable = true;
+    div.id = "item-" + i;
+    div.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("type", item.type);
+      e.dataTransfer.setData("id", div.id);
     });
-
-    el.addEventListener('dragend', () => {
-      el.style.opacity = '1';
-    });
-
-    itemsBox.appendChild(el);
-  }
+    itemsArea.appendChild(div);
+  });
 }
 
-generateItems(8);
-
-[compost, trash].forEach((bin) => {
-  bin.addEventListener('dragover', (e) => e.preventDefault());
-  bin.addEventListener('drop', (e) => {
-    e.preventDefault();
-    const type = e.dataTransfer.getData('type');
-    const value = Number(e.dataTransfer.getData('value'));
-    handleDrop(bin.id, type, value);
-  });
+// Permitir arrastar sobre os bins
+[compostBin, trashBin].forEach((bin) => {
+  bin.addEventListener("dragover", (e) => e.preventDefault());
+  bin.addEventListener("drop", dropItem);
 });
 
-function handleDrop(targetId, type, value) {
-  if (targetId === 'compost') {
-    if (type === 'plastic') {
-      game.pollution += 5;
-      game.compost -= 1;
-      log('❌ Plástico na composteira — poluição aumentou!');
-    } else if (type === 'org') {
-      game.compost += 4;
-      game.resources += 2;
-      log('✅ Orgânicos compostados com sucesso.');
-    } else if (type === 'paper') {
-      game.compost += 2;
-      game.resources += 1;
-      log('📝 Papel aceito na compostagem.');
-    }
-  } else if (targetId === 'trash') {
-    if (type === 'plastic') {
-      log('🗑️ Plástico descartado corretamente.');
-    } else {
-      game.resources = Math.max(0, game.resources - 1);
-      log('⚠️ Orgânicos no lixo — perda de recurso.');
-    }
+function dropItem(e) {
+  e.preventDefault();
+  const type = e.dataTransfer.getData("type");
+  const id = e.dataTransfer.getData("id");
+  const element = document.getElementById(id);
+  element.remove();
+
+  if (this.id === "composteira" && type === "org") {
+    score++;
+    message.textContent = "🌿 Acertou! Isso vai para a compostagem.";
+  } else if (this.id === "lixo" && type === "trash") {
+    score++;
+    message.textContent = "🗑️ Muito bem! Isso vai para o lixo comum.";
+  } else {
+    score--;
+    message.textContent = "❌ Errou! Esse lixo foi pro lugar errado.";
   }
 
-  clampValues();
-  updateUI();
-}
+  updateScore();
 
-function clampValues() {
-  game.compost = Math.max(0, Math.round(game.compost));
-  game.resources = Math.max(0, Math.round(game.resources));
-  game.pollution = Math.max(0, Math.round(game.pollution));
-}
-
-function updateUI() {
-  compostAmt.textContent = game.compost;
-  resources.textContent = game.resources;
-  pollution.textContent = game.pollution;
-  compostFill.style.height = Math.min(100, game.compost * 3) + '%';
-}
-
-setInterval(() => {
-  const produced = Math.floor(game.compost * 0.02 * game.decayRate);
-  if (produced > 0) {
-    game.resources += produced;
-    game.compost = Math.max(0, game.compost - produced);
-    log(`🌱 +${produced} recursos gerados pela compostagem.`);
+  if (score >= 10) {
+    message.textContent = "🎉 Parabéns! Você é um mestre da compostagem!";
   }
-  if (Math.random() < 0.15) generateItems(1);
-  clampValues();
-  updateUI();
-}, 3000);
 
-log('Bem-vindo! Arraste os itens para a composteira ou para o lixo.');
-updateUI();
+  if (itemsArea.children.length === 0) {
+    setTimeout(createItems, 1500);
+  }
+}
+
+function updateScore() {
+  scoreText.textContent = "Pontos: " + score;
+}
+
+createItems();
+

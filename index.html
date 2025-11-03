@@ -1,69 +1,30 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Compostagem & Gestão de Recursos — Amostra 3K</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo da Compostagem</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="app">
-<header>
-<h1>Compostagem & Gestão de Recursos</h1>
-<p class="credit">feito por alunos do CEP para amostra de quimica 3K</p>
-</header>
+  <h1>♻️ Jogo da Compostagem</h1>
+  <p>Arraste os itens para o lugar certo!</p>
 
+  <div id="game">
+    <div id="items" class="area"></div>
 
-<main>
-<section class="left">
-<div class="inventory">
-<h2>Itens</h2>
-<div class="items" id="items">
-<!-- itens gerados por JS -->
-</div>
-</div>
-
-
-<div class="controls">
-<h2>Controles</h2>
-<label>Umidade: <span id="moistureVal">60</span>%</label>
-<input id="moisture" type="range" min="20" max="90" value="60">
-
-
-<label>Aeração (virar): <span id="aerationVal">1</span></label>
-<button id="turnBtn">Virar composto</button>
-
-
-<button id="spawnBtn">Gerar novos itens</button>
-</div>
-</section>
-
-
-<section class="center">
-<div class="bin-area">
-<div class="compost-bin" id="compost">
-<div class="compost-fill" id="compostFill"></div>
-<div class="bin-label">Composteira</div>
-</div>
-
-
-<div class="trash-bin" id="trash">
-<div class="bin-label">Lixo</div>
-</div>
-</div>
-
-
-<div class="status">
-<div>Composto: <strong id="compostAmt">0</strong></div>
-<div>Recursos gerados: <strong id="resources">0</strong></div>
-<div>Poluição: <strong id="pollution">0</strong></div>
-</div>
-    <footer>
-      <small>Jogo educacional — Aprenda sobre compostagem e tomada de decisão em recursos.</small>
-    </footer>
+    <div class="bins">
+      <div id="composteira" class="bin">Composteira</div>
+      <div id="lixo" class="bin">Lixo Comum</div>
+    </div>
   </div>
 
-  <!-- O script deve estar aqui, antes de fechar o body -->
+  <div id="score">Pontos: 0</div>
+  <div id="message"></div>
+
+  <footer>Feito por alunos do CEP — Amostra de Química 3K</footer>
+
   <script src="script.js"></script>
 </body>
 </html>
+

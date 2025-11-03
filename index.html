@@ -1,0 +1,126 @@
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// 🧩 Jogo interativo sobre reciclagem e gestão de recursos naturais
+// 🌱 Feito por alunos do CEP — Amostra de Química do TERCEIRO K — 2025
+
+export default function MissaoPlanetaLimpo() {
+  const [fase, setFase] = useState(0);
+  const [pontos, setPontos] = useState(0);
+
+  const avancar = (valor = 0) => {
+    setPontos(pontos + valor);
+    setFase(fase + 1);
+  };
+
+  const fases = [
+    {
+      titulo: '🌍 Missão Planeta Limpo',
+      conteudo: (
+        <div className="text-center space-y-4">
+          <p className="text-lg text-gray-700 dark:text-gray-200">
+            Bem-vindo(a) à <strong>Missão Planeta Limpo</strong>! Seu desafio é salvar o planeta aprendendo sobre <strong>reciclagem</strong> e <strong>gestão sustentável dos recursos</strong>.
+          </p>
+          <button onClick={() => avancar()} className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-2xl shadow-md hover:shadow-lg transition-all">
+            Começar Jogo ♻️
+          </button>
+        </div>
+      ),
+    },
+    {
+      titulo: '🚮 Estação 1 – Desafio da Reciclagem',
+      conteudo: (
+        <div className="space-y-3 text-left">
+          <p>Coloque cada item na lixeira correta:</p>
+          <ul className="list-disc list-inside">
+            <li>Azul: papel</li>
+            <li>Vermelho: plástico</li>
+            <li>Verde: vidro</li>
+            <li>Amarelo: metal</li>
+            <li>Marrom: orgânico</li>
+          </ul>
+          <button onClick={() => avancar(5)} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl shadow-md hover:shadow-xl transition-all">
+            Concluir Estação ✅
+          </button>
+        </div>
+      ),
+    },
+    {
+      titulo: '💧 Estação 2 – Gestor dos Recursos',
+      conteudo: (
+        <div className="space-y-3">
+          <p>Responda rápido:</p>
+          <p>Fechar a torneira ao escovar os dentes economiza até:</p>
+          <div className="flex flex-col gap-2">
+            <button onClick={() => avancar(2)} className="btn">30 litros 💧</button>
+            <button onClick={() => avancar(0)} className="btn">5 litros</button>
+            <button onClick={() => avancar(0)} className="btn">100 litros</button>
+          </div>
+        </div>
+      ),
+    },
+    {
+      titulo: '🔁 Estação 3 – Oficina do Reaproveitamento',
+      conteudo: (
+        <div className="space-y-3">
+          <p>Crie um objeto útil com materiais recicláveis (garrafa PET, tampinhas, papelão...).</p>
+          <p>Use a criatividade e ganhe até 5 pontos!</p>
+          <button onClick={() => avancar(5)} className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-xl shadow-md hover:shadow-xl transition-all">
+            Finalizar Criação 🎨
+          </button>
+        </div>
+      ),
+    },
+    {
+      titulo: '🏆 Resultado Final',
+      conteudo: (
+        <div className="text-center space-y-4">
+          <h2 className="text-2xl font-bold">Parabéns! 🌿</h2>
+          <p>Você completou a Missão Planeta Limpo com <strong>{pontos}</strong> pontos!</p>
+          <p>Continue sendo um(a) guardião(ã) do planeta!</p>
+          <button onClick={() => { setFase(0); setPontos(0); }} className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-2xl shadow-md hover:shadow-lg transition-all">
+            Jogar Novamente 🔄
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-green-100 to-blue-200 dark:from-gray-800 dark:to-gray-900 p-6">
+      <motion.div
+        key={fase}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -30 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white/80 dark:bg-gray-800/80 rounded-2xl p-8 shadow-2xl max-w-lg w-full border border-green-200 backdrop-blur-md"
+      >
+        <h1 className="text-3xl font-bold text-center text-green-700 dark:text-green-300 mb-4">
+          {fases[fase].titulo}
+        </h1>
+        <AnimatePresence mode="wait">{fases[fase].conteudo}</AnimatePresence>
+      </motion.div>
+
+      <footer className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
+        <p>🌎 Feito com 💚 por alunos do <strong>CEP</strong> — Amostra de Química do <strong>TERCEIRO K (2025)</strong></p>
+      </footer>
+
+      <style jsx>{`
+        .btn {
+          background-color: #22c55e;
+          color: white;
+          padding: 0.5rem 1rem;
+          border-radius: 0.75rem;
+          transition: all 0.2s ease-in-out;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .btn:hover {
+          background-color: #16a34a;
+          transform: scale(1.05);
+          box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+      `}</style>
+    </div>
+  );
+}

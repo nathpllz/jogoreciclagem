@@ -3,22 +3,216 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Missão Planeta Limpo</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Missão Planeta Limpo 🌍</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #a8e6cf, #dcedc1, #ffd3b6, #ffaaa5);
+      background-size: 400% 400%;
+      animation: bgMove 10s ease infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: #333;
+    }
+    @keyframes bgMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    h1 {
+      color: #2e7d32;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+      animation: fadeIn 1s ease forwards;
+    }
+    #game {
+      background: rgba(255, 255, 255, 0.85);
+      padding: 2rem;
+      margin-top: 1rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+      animation: slideIn 1s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    button {
+      background: linear-gradient(135deg, #66bb6a, #43a047);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 30px;
+      margin-top: 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+    ul {
+      text-align: left;
+      padding-left: 1.5rem;
+    }
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      color: #444;
+      font-size: 0.9rem;
+      animation: fadeIn 2s ease forwards;
+    }
+    .fade {
+      animation: fadeIn 0.7s ease;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🌍 Missão Planeta Limpo</h1>
-    <div id="game">
-      <p>Bem-vindo(a) à <strong>Missão Planeta Limpo!</strong></p>
-      <p>Aprenda sobre <strong>reciclagem</strong> e <strong>gestão sustentável</strong> jogando!</p>
-      <button id="startBtn" class="btn">Começar Jogo ♻️</button>
-    </div>
-    <footer>
-      🌎 Feito com 💚 por alunos do <strong>CEP</strong> — Amostra de Química do <strong>TERCEIRO K (2025)</strong>
-    </footer>
+
+  <h1>🌍 Missão Planeta Limpo</h1>
+  <div id="game" class="fade">
+    <p>Bem-vindo(a) à <strong>Missão Planeta Limpo!</strong></p>
+    <p>Aprenda sobre <strong>reciclagem</strong> e <strong>gestão sustentável</strong> jogando!</p>
+    <button onclick="iniciar()">Começar Jogo ♻️</button>
   </div>
 
-  <script src="script.js"></script>
+  <footer>
+    🌎 Feito com 💚 por alunos do <strong>CEP</strong> — Amostra de Química do <strong>TERCEIRO K (2025)</strong>
+  </footer>
+
+  <script>
+    let fase = 0;
+    let pontos = 0;
+
+    const fases = [
+      {
+        titulo: "🚮 Estação 1 – Desafio da Reciclagem",
+        conteudo: `
+          <p>Coloque cada item na lixeira correta:</p>
+          <ul>
+            <li>🟦 Azul: papel</li>
+            <li>🟥 Vermelho: plástico</li>
+            <li>🟩 Verde: vidro</li>
+            <li>🟨 Amarelo: metal</li>
+            <li>🟫 Marrom: orgânico</li>
+          </ul>
+          <button onclick='avancar(5)'>Concluir Estação ✅</button>
+        `
+      },
+      {
+        titulo: "💧 Estação 2 – Gestor dos Recursos",
+        conteudo: `
+          <p>Fechar a torneira enquanto escova os dentes economiza até:</p>
+          <button onclick='avancar(2)'>💧 30 litros</button>
+          <button onclick='avancar(0)'>5 litros</button>
+          <button onclick='avancar(0)'>100 litros</button>
+        `
+      },
+      {
+        titulo: "🔁 Estação 3 – Oficina do Reaproveitamento",
+        conteudo: `
+          <p>Crie um objeto útil com material reciclável!</p>
+          <p>Ganhe até 5 pontos pela criatividade!</p>
+          <button onclick='avancar(5)'>Finalizar Criação 🎨</button>
+        `
+      },
+      {
+        titulo: "🏆 Resultado Final",
+        conteudo: `
+          <h2>Parabéns! 🌿</h2>
+          <p>Você completou a Missão Planeta Limpo com <strong id='pontuacao'></strong> pontos!</p>
+          <button onclick='reiniciar()'>Jogar Novamente 🔄</button>
+        `
+      }
+    ];
+
+    function iniciar() {
+      fase = 0;
+      pontos = 0;
+      mostrarFase();
+    }
+
+    function mostrarFase() {
+      const f = fases[fase];
+      const game = document.getElementById("game");
+      game.classList.remove("fade");
+      void game.offsetWidth;
+      game.classList.add("fade");
+      game.innerHTML = `<h2>${f.titulo}</h2>${f.conteudo}`;
+    }
+
+    function avancar(valor) {
+      pontos += valor;
+      fase++;
+      if (fase < fases.length - 1) {
+        mostrarFase();
+      } else {
+        mostrarResultado();
+      }
+    }
+
+    function mostrarResultado() {
+      const game = document.getElementById("game");
+      game.innerHTML = `<h2>${fases[3].titulo}</h2>${fases[3].conteudo}`;
+      document.getElementById("pontuacao").textContent = pontos;
+      confete();
+    }
+
+    function reiniciar() {
+      const game = document.getElementById("game");
+      game.innerHTML = `
+        <p>Bem-vindo(a) à <strong>Missão Planeta Limpo!</strong></p>
+        <p>Aprenda sobre <strong>reciclagem</strong> e <strong>gestão sustentável</strong> jogando!</p>
+        <button onclick="iniciar()">Começar Jogo ♻️</button>
+      `;
+    }
+
+    // 🎉 Efeito de confete no final
+    function confete() {
+      for (let i = 0; i < 40; i++) {
+        const conf = document.createElement("div");
+        conf.style.position = "fixed";
+        conf.style.width = "10px";
+        conf.style.height = "10px";
+        conf.style.borderRadius = "50%";
+        conf.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+        conf.style.top = "0";
+        conf.style.left = Math.random() * 100 + "vw";
+        conf.style.opacity = 0.8;
+        conf.style.animation = `fall ${2 + Math.random() * 3}s linear`;
+        conf.style.zIndex = "1000";
+        document.body.appendChild(conf);
+        setTimeout(() => conf.remove(), 4000);
+      }
+    }
+
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes fall {
+        to {
+          transform: translateY(100vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+
 </body>
 </html>

@@ -55,4 +55,4 @@ if(Math.random() < 0.12) generateItems(1);
 
 
 // dica inicial
-log('Bem-vindo! Arraste itens para a composteira ou para o lixo)
+log('Bem-vindo! Arraste itens para a composteira ou para o lixo')

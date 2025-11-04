@@ -24,6 +24,7 @@ const items = [
 
 function createItems() {
   itemsArea.innerHTML = "";
+  totalItems = items.length;
   items.forEach((item, i) => {
     const div = document.createElement("div");
     div.className = `item ${item.type}`;
@@ -56,23 +57,20 @@ function dropItem(e) {
 
   if (this.id === "composteira" && type === "org") {
     score++;
-    message.textContent = "🌿 Acertou! Isso vai para a compostagem.";
+    message.textContent = "🌿 Acertou! Compostagem!";
   } else if (this.id === "lixo" && type === "trash") {
     score++;
-    message.textContent = "🗑️ Muito bem! Isso vai para o lixo comum.";
+    message.textContent = "🗑️ Certinho! Vai pro lixo comum.";
   } else {
-    loseGame(); // ❌ Perdeu o jogo
+    loseGame();
     return;
   }
 
   updateScore();
 
-  if (score >= 9) {
-    message.textContent = "🎉 Parabéns! Você é um mestre da compostagem!";
-  }
-
-  if (itemsArea.children.length === 0) {
-    setTimeout(createItems, 1500);
+  // Se acertou tudo
+  if (score === totalItems) {
+    winGame();
   }
 }
 
@@ -87,8 +85,12 @@ function loseGame() {
   message.textContent = "💀 Você errou e contaminou a composteira!";
 }
 
-resetBtn.addEventListener("click", resetGame);
-restartGame.addEventListener("click", resetGame);
+function winGame() {
+  gameOver = true;
+  document.body.style.filter = "brightness(1.2)";
+  victoryScreen.classList.remove("hidden");
+  message.textContent = "🎉 Parabéns! Você ganhou um pirulito!";
+}
 
 function resetGame() {
   gameOver = false;
@@ -96,8 +98,13 @@ function resetGame() {
   message.textContent = "";
   document.body.style.filter = "none";
   gameOverScreen.classList.add("hidden");
+  victoryScreen.classList.add("hidden");
   updateScore();
   createItems();
 }
+
+resetBtn.addEventListener("click", resetGame);
+restartGame.addEventListener("click", resetGame);
+playAgain.addEventListener("click", resetGame);
 
 window.onload = createItems;

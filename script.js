@@ -67,7 +67,7 @@ function dropItem(e) {
 
   updateScore();
 
-  if (score >= 10) {
+  if (score >= 9) {
     message.textContent = "🎉 Parabéns! Você é um mestre da compostagem!";
   }
 

@@ -5,26 +5,29 @@ const scoreText = document.getElementById("score");
 const message = document.getElementById("message");
 const resetBtn = document.getElementById("resetBtn");
 const gameOverScreen = document.getElementById("gameOver");
+const victoryScreen = document.getElementById("victory");
 const restartGame = document.getElementById("restartGame");
+const playAgain = document.getElementById("playAgain");
 
 let score = 0;
 let gameOver = false;
 
 const items = [
   { name: "Casca de banana", type: "org" },
-  { name: "Papel", type: "org" },
   { name: "Garrafa plástica", type: "trash" },
   { name: "Restos de comida", type: "org" },
   { name: "Lata de refrigerante", type: "trash" },
-  { name: "carne", type: "trash" },
-  { name: "Casca de ovo", type: "org" },
+  { name: "Carne, type: "trash" } , n
   { name: "Folhas secas", type: "org" },
+  { name: "cascas de ovo", type: "org" },
   { name: "Isopor", type: "trash" },
 ];
 
 function createItems() {
   itemsArea.innerHTML = "";
-  totalItems = items.length;
+  score = 0;
+  gameOver = false;
+  updateScore();
   items.forEach((item, i) => {
     const div = document.createElement("div");
     div.className = `item ${item.type}`;
@@ -55,22 +58,17 @@ function dropItem(e) {
   const element = document.getElementById(id);
   if (element) element.remove();
 
-  if (this.id === "composteira" && type === "org") {
+  if ((this.id === "composteira" && type === "org") ||
+      (this.id === "lixo" && type === "trash")) {
     score++;
-    message.textContent = "🌿 Acertou! Compostagem!";
-  } else if (this.id === "lixo" && type === "trash") {
-    score++;
-    message.textContent = "🗑️ Certinho! Vai pro lixo comum.";
+    message.textContent = "✅ Acertou!";
+    updateScore();
+
+    if (score === items.length) {
+      winGame();
+    }
   } else {
     loseGame();
-    return;
-  }
-
-  updateScore();
-
-  // Se acertou tudo
-  if (score === totalItems) {
-    winGame();
   }
 }
 
@@ -80,26 +78,24 @@ function updateScore() {
 
 function loseGame() {
   gameOver = true;
-  document.body.style.filter = "grayscale(100%) brightness(0.6)";
+  itemsArea.innerHTML = ""; // ❌ apaga todos os itens
+  message.textContent = "💀 Você perdeu!";
+  document.body.style.filter = "grayscale(100%)";
   gameOverScreen.classList.remove("hidden");
-  message.textContent = "💀 Você errou e contaminou a composteira!";
 }
 
 function winGame() {
   gameOver = true;
-  document.body.style.filter = "brightness(1.2)";
-  victoryScreen.classList.remove("hidden");
+  itemsArea.innerHTML = ""; // limpa tudo ao vencer também
   message.textContent = "🎉 Parabéns! Você ganhou um pirulito!";
+  victoryScreen.classList.remove("hidden");
 }
 
 function resetGame() {
-  gameOver = false;
-  score = 0;
-  message.textContent = "";
   document.body.style.filter = "none";
+  message.textContent = "";
   gameOverScreen.classList.add("hidden");
   victoryScreen.classList.add("hidden");
-  updateScore();
   createItems();
 }
 

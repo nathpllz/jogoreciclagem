@@ -48,10 +48,10 @@ h1 {
 }
 
 .item.org {
-  background-color: #a5d6a7;
+  background-color: #79e79e;;
 }
-.item.trash {
-  background-color: #ef9a9a;
+.item.trash { 
+  background-color: #79e79e;
 }
 
 .bins {

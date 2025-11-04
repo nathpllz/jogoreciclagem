@@ -25,9 +25,7 @@ const items = [
 
 function createItems() {
   itemsArea.innerHTML = "";
-  score = 0;
-  gameOver = false;
-  updateScore();
+  totalItems = items.length;
   items.forEach((item, i) => {
     const div = document.createElement("div");
     div.className = `item ${item.type}`;
@@ -58,17 +56,22 @@ function dropItem(e) {
   const element = document.getElementById(id);
   if (element) element.remove();
 
-  if ((this.id === "composteira" && type === "org") ||
-      (this.id === "lixo" && type === "trash")) {
+  if (this.id === "composteira" && type === "org") {
     score++;
-    message.textContent = "✅ Acertou!";
-    updateScore();
-
-    if (score === items.length) {
-      winGame();
-    }
+    message.textContent = "🌿 Acertou! Compostagem!";
+  } else if (this.id === "lixo" && type === "trash") {
+    score++;
+    message.textContent = "🗑️ Certinho! Vai pro lixo comum.";
   } else {
     loseGame();
+    return;
+  }
+
+  updateScore();
+
+  // Se acertou tudo
+  if (score === totalItems) {
+    winGame();
   }
 }
 
@@ -78,24 +81,26 @@ function updateScore() {
 
 function loseGame() {
   gameOver = true;
-  itemsArea.innerHTML = ""; // ❌ apaga todos os itens
-  message.textContent = "💀 Você perdeu!";
-  document.body.style.filter = "grayscale(100%)";
+  document.body.style.filter = "grayscale(100%) brightness(0.6)";
   gameOverScreen.classList.remove("hidden");
+  message.textContent = "💀 Você errou e contaminou a composteira!";
 }
 
 function winGame() {
   gameOver = true;
-  itemsArea.innerHTML = ""; // limpa tudo ao vencer também
-  message.textContent = "🎉 Parabéns! Você ganhou um pirulito!";
+  document.body.style.filter = "brightness(1.2)";
   victoryScreen.classList.remove("hidden");
+  message.textContent = "🎉 Parabéns! Você ganhou um pirulito!";
 }
 
 function resetGame() {
-  document.body.style.filter = "none";
+  gameOver = false;
+  score = 0;
   message.textContent = "";
+  document.body.style.filter = "none";
   gameOverScreen.classList.add("hidden");
   victoryScreen.classList.add("hidden");
+  updateScore();
   createItems();
 }
 

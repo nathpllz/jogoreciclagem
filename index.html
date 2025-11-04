@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jogo da Compostagem</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <h1>♻️ Jogo da Compostagem</h1>
@@ -24,23 +24,26 @@
 
   <button id="resetBtn">🔄 Reiniciar Jogo</button>
 
+  <!-- Tela de derrota -->
   <div id="gameOver" class="hidden">
     <div class="overlay"></div>
-    <div class="gameover-box">
+    <div class="popup">
       <h2>💀 Você perdeu!</h2>
       <p>Um descarte errado contaminou tudo!</p>
       <button id="restartGame">Tentar novamente</button>
     </div>
   </div>
 
-    <div id="victory" class="hidden">
+  <!-- Tela de vitória -->
+  <div id="victory" class="hidden">
     <div class="overlay"></div>
-    <div class="victory-box">
+    <div class="popup win">
       <h2>🎉 Parabéns! Você ganhou um pirulito! 🍭</h2>
       <div class="lollipop"></div>
       <button id="playAgain">Jogar novamente</button>
     </div>
   </div>
+
   <footer>Feito por alunos do CEP — Amostra de Química 3K</footer>
 
   <script src="script.js"></script>

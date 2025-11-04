@@ -3,6 +3,7 @@ const trashBin = document.getElementById("lixo");
 const itemsArea = document.getElementById("items");
 const scoreText = document.getElementById("score");
 const message = document.getElementById("message");
+const resetBtn = document.getElementById("resetBtn");
 
 let score = 0;
 
@@ -71,6 +72,14 @@ function dropItem(e) {
 function updateScore() {
   scoreText.textContent = "Pontos: " + score;
 }
+
+// 🔄 Reiniciar o jogo
+resetBtn.addEventListener("click", () => {
+  score = 0;
+  message.textContent = "";
+  updateScore();
+  createItems();
+});
 
 createItems();
 

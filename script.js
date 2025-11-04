@@ -16,7 +16,8 @@ const items = [
   { name: "Garrafa plástica", type: "trash" },
   { name: "Restos de comida", type: "org" },
   { name: "Lata de refrigerante", type: "trash" },
-  { name: "carne", type: "trash" }
+  { name: "carne", type: "trash" },
+  { name: "Casca de ovo", type: "org" },
   { name: "Folhas secas", type: "org" },
   { name: "Isopor", type: "trash" },
 ];

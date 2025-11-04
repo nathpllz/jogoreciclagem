@@ -4,21 +4,22 @@ const itemsArea = document.getElementById("items");
 const scoreText = document.getElementById("score");
 const message = document.getElementById("message");
 const resetBtn = document.getElementById("resetBtn");
+const gameOverScreen = document.getElementById("gameOver");
+const restartGame = document.getElementById("restartGame");
 
 let score = 0;
+let gameOver = false;
 
 const items = [
   { name: "Casca de banana", type: "org" },
   { name: "Papel", type: "org" },
   { name: "Garrafa plástica", type: "trash" },
   { name: "Restos de comida", type: "org" },
-  { name: "casca de ovo", type: "org" },
-  { name: "carne", type: "trash" },
+  { name: "Lata de refrigerante", type: "trash" },
   { name: "Folhas secas", type: "org" },
   { name: "Isopor", type: "trash" },
 ];
 
-// Gera os itens
 function createItems() {
   itemsArea.innerHTML = "";
   items.forEach((item, i) => {
@@ -28,6 +29,7 @@ function createItems() {
     div.draggable = true;
     div.id = "item-" + i;
     div.addEventListener("dragstart", (e) => {
+      if (gameOver) return;
       e.dataTransfer.setData("type", item.type);
       e.dataTransfer.setData("id", div.id);
     });
@@ -42,11 +44,13 @@ function createItems() {
 });
 
 function dropItem(e) {
+  if (gameOver) return;
   e.preventDefault();
+
   const type = e.dataTransfer.getData("type");
   const id = e.dataTransfer.getData("id");
   const element = document.getElementById(id);
-  element.remove();
+  if (element) element.remove();
 
   if (this.id === "composteira" && type === "org") {
     score++;
@@ -55,8 +59,8 @@ function dropItem(e) {
     score++;
     message.textContent = "🗑️ Muito bem! Isso vai para o lixo comum.";
   } else {
-    score--;
-    message.textContent = "❌ Errou! Esse lixo foi pro lugar errado.";
+    loseGame(); // ❌ Perdeu o jogo
+    return;
   }
 
   updateScore();
@@ -74,13 +78,24 @@ function updateScore() {
   scoreText.textContent = "Pontos: " + score;
 }
 
-// 🔄 Reiniciar o jogo
-resetBtn.addEventListener("click", () => {
+function loseGame() {
+  gameOver = true;
+  document.body.style.filter = "grayscale(100%) brightness(0.6)";
+  gameOverScreen.classList.remove("hidden");
+  message.textContent = "💀 Você errou e contaminou a composteira!";
+}
+
+resetBtn.addEventListener("click", resetGame);
+restartGame.addEventListener("click", resetGame);
+
+function resetGame() {
+  gameOver = false;
   score = 0;
   message.textContent = "";
+  document.body.style.filter = "none";
+  gameOverScreen.classList.add("hidden");
   updateScore();
   createItems();
-});
+}
 
-// Garante que os itens apareçam assim que a página carregar
 window.onload = createItems;

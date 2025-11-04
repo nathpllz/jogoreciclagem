@@ -81,5 +81,5 @@ resetBtn.addEventListener("click", () => {
   createItems();
 });
 
-createItems();
-
+// Garante que os itens apareçam assim que a página carregar
+window.onload = createItems;
